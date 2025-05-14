@@ -32,11 +32,9 @@ int main() {
 
         count = tokenizer(input, argv); // number of succesful tokens (0-indexed)
 
-        if ((count + 1) > MAX_ARGV) {
-            fprintf(stderr, "You somehow broke the token limit. How???????\n");
-        } else {
-            argv[count + 1] = NULL; // this should work but the edge case is there for fun and to catch somebody fucking with the code
-        }
+        // a token limit edge case was removed, it was pretty useless
+        argv[count + 1] = NULL; // this should work but the edge case is there for fun and to catch somebody fucking with the code
+        
         
         // builtin commands code + a quick memory freer for the argvs
         if (argv[0] != NULL) {
@@ -61,7 +59,7 @@ int main() {
         } else if (prog == 0) {
             // the child process!
             execvp(argv[0], argv); // execvp()
-            perror("minimSH");
+            perror("minimSH"); // I BLAME MYSELF (print error)
             exit(EXIT_FAILURE); // exit child process
         } else {
             wait(NULL); // wait, ignore return status

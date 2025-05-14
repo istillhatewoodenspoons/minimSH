@@ -10,12 +10,15 @@
 #include "defines.h"
 
 // 'which' is seperate to reduce the already high amount of clutter in checkBuiltin().
-int which(char* file) {
+int which(char* files[]) {
     char* PATH;
+
+    // Stage 1: Getting the path
+
 }
 
 // some builtin commands. currently cd, pwd, and exit.
-int checkBuiltin(char* argv[MAX_ARGV]) {
+int checkBuiltin(char* argv[MAX_ARGV], int which) {
     char* homeDirectory = NULL; // for cd with no arguments
 
     #if CWD_SIZE <= 2048
@@ -39,14 +42,24 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
 
     // cd 
     else if (strcmp(argv[0], "cd") == 0) {
+        // argument not specified
         if (argv[1] == NULL) {
             homeDirectory = getenv("HOME"); // get the home thingy. I assume getenv uses malloc(), similar to strdup
             if (homeDirectory == NULL) {
-                
+                perror("minimSH: Failed to get home directory");
+                return -1; // error. Yes, I swear these will get put into some log and won't become useless later on.
+            } else {
+                // just self-explanatory
+                if (chdir(homeDirectory) == 0) {
+                    return -1;
+                } else {
+                    perror("cd");
+                    return -1;
+                }
             }
         }
 
-        // if an argument is not specified
+        // if an argument is specified
         if (chdir(argv[1]) == 0) {
             return 1; // succesful
         } else {
@@ -82,6 +95,10 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
             return -1;
         }
     }
+
+    else if (strcmp(argv[0], "which")) {
+        which()
+    }    
     // end of core code
 
     #if CWD_SIZE > 2048
