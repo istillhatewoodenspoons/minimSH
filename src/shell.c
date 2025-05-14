@@ -14,7 +14,7 @@
 
 int main() {
     pid_t prog = 0;
-    char* argv[MAX_ARGV]; // the argv thing
+    char* argv[MAX_ARGV]; // the argv thing.
     char input[INPUT_BUF_SIZE];
 
     int check = 0; // general-purpose int used for strcspn

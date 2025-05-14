@@ -4,16 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> // sorry windows people :P
+#include <dirent.h> // for 'which'
 
 #include "builtins.h"
 #include "defines.h"
 
+// 'which' is seperate to reduce the already high amount of clutter in checkBuiltin().
+int which(char* file) {
+    char* PATH;
+}
+
 // some builtin commands. currently cd, pwd, and exit.
 int checkBuiltin(char* argv[MAX_ARGV]) {
     int check = 0;
-    #ifdef TRIBUTE_MODE
-    int *ptr = NULL; // intentional segfault to make the forest_interlude cooler
-    #endif
 
     #if CWD_SIZE <= 2048
         char cwd[CWD_SIZE];
