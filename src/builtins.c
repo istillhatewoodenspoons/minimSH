@@ -16,7 +16,7 @@ int which(char* file) {
 
 // some builtin commands. currently cd, pwd, and exit.
 int checkBuiltin(char* argv[MAX_ARGV]) {
-    int check = 0;
+    char* homeDirectory = NULL; // for cd with no arguments
 
     #if CWD_SIZE <= 2048
         char cwd[CWD_SIZE];
@@ -40,13 +40,15 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
     // cd 
     else if (strcmp(argv[0], "cd") == 0) {
         if (argv[1] == NULL) {
-            fprintf(stderr, "cd: Specify a directory.\n");
-            return -1;
+            homeDirectory = getenv("HOME"); // get the home thingy. I assume getenv uses malloc(), similar to strdup
+            if (homeDirectory == NULL) {
+                
+            }
         }
-        check = chdir(argv[1]);
-        if (check == 0) {
-            return -1; // succesful
-        
+
+        // if an argument is not specified
+        if (chdir(argv[1]) == 0) {
+            return 1; // succesful
         } else {
             perror("cd");
             return -1; // error...
