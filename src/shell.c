@@ -15,7 +15,7 @@
 int main() {
     pid_t prog = 0;
     char* argv[MAX_ARGV]; // the argv thing.
-    char input[INPUT_BUF_SIZE];
+    char input[INPUT_BUF_SIZE]; // bordering on the edge of killing the stack
 
     int check = 0; // general-purpose int used for strcspn
     int count = 0; // token counter!!!!

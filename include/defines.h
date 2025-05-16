@@ -7,5 +7,6 @@
 
     #define CWD_SIZE 2048 // do not touch this one and make it go over 2048 if you want memory leaks.
     #define INPUT_BUF_SIZE 8192 // more than enough
+    #define WHICH_PATH_BUF_SIZE 8192 // 
 
 #endif

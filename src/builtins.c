@@ -8,13 +8,18 @@
 
 #include "builtins.h"
 #include "defines.h"
+#include "tokenizer.h"
 
 // 'which' is seperate to reduce the already high amount of clutter in checkBuiltin().
 int which(char* files[]) {
-    char* PATH;
+    char* PATH = NULL; // null string pointer
 
     // Stage 1: Getting the path
-
+    PATH = getenv("PATH"); // uses malloc() so I'll free it later
+    if (PATH == NULL) {
+        perror("minimSH: Failed to get $PATH");
+        return -1;
+    }
 }
 
 // some builtin commands. currently cd, pwd, and exit.
@@ -96,8 +101,8 @@ int checkBuiltin(char* argv[MAX_ARGV], int which) {
         }
     }
 
-    else if (strcmp(argv[0], "which")) {
-        which()
+    else if (strcmp(argv[0], "which") == 0) {
+        
     }    
     // end of core code
 
