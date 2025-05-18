@@ -4,37 +4,20 @@
 #include <dirent.h>
 
 #include "tokenizer.h"
-
-// this is the one called by which() in builtins.c until I figure out a way to reuse the code.
-int whichTokenizer(char* input, char* tokens[]) {
-    char* currentToken = NULL;
-    char* full_path = NULL;
-    int count = 0;
-
-    currentToken = strtok(input, ":"); // split on colons
-        while (currentToken != NULL && count < MAX_TOKENS) {
-            tokens[count] = strdup(currentToken); // duplicate, this makes it so that you need to free it later
-            currentToken = strtok(NULL, ":"); // currently only does this with SPACES. will expand to quotations.
-            count++; // increment. this will continue until currentToken == NULL and count > 63
-        }
-        tokens[count] = NULL;
-
-    free(full_path); // free the path variable
-    return count; // return number of tokens stored?
-}
+#include "defines.h"
 
 // This function puts strings into tokens[]. They must be free()d. 
-int tokenizer(char* input, char* tokens[MAX_TOKENS]) {
-    char* currentToken = NULL;
+int tokenizer(char* input, Token tokens[MAX_TOKENS]) {
+    Token currentToken;
     int count = 0;
-
-    currentToken = strtok(input, " \n");
-        while (currentToken != NULL && count < MAX_TOKENS) {
-            tokens[count] = strdup(currentToken); // duplicate, this makes it so that you need to free it later
-            currentToken = strtok(NULL, " \n"); // currently only does this with SPACES. will expand to quotations.
+    
+    currentToken.token = strtok(input, "\"");
+        while (currentToken.token != NULL && count < MAX_TOKENS) {
+            tokens[count].token = strdup(currentToken.token); // duplicate, this makes it so that you need to free it later
+            currentToken.token = strtok(NULL, "\""); // currently only does this with SPACES. will expand to quotations.
             count++; // increment. this will continue until currentToken == NULL and count > 63
         }
-        tokens[count] = NULL;
+        tokens[count].token = NULL;
     return count; // return number of tokens stored?
 }
 

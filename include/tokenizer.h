@@ -5,10 +5,13 @@
     #include "defines.h"
 
     // types
-    typedef struct {
+    typedef struct token {
         char* token; // the string part of the token
-        bool quotedToken; // did it use quotes?
-    } TOKEN;
+        // yes i'm wasting a lot of memory here but please cut me some slack
+        bool quotedToken;
+        bool redirectionToken;
+        bool doubleQuotedToken;
+    } Token;
 
     // function declerations
     int tokenizer(char* input, char* tokens[MAX_TOKENS]);

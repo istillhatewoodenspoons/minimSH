@@ -20,6 +20,8 @@ int which(char* files[]) {
         perror("minimSH: Failed to get $PATH");
         return -1;
     }
+    
+    free(PATH); // free the pointer
 }
 
 // some builtin commands. currently cd, pwd, and exit.
