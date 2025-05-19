@@ -4,29 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> // sorry windows people :P
-#include <dirent.h> // for 'which'
 
 #include "builtins.h"
 #include "defines.h"
-#include "tokenizer.h"
-
-// 'which' is seperate to reduce the already high amount of clutter in checkBuiltin().
-int which(char* files[]) {
-    char* PATH = NULL; // null string pointer
-
-    // Stage 1: Getting the path
-    PATH = getenv("PATH"); // uses malloc() so I'll free it later
-    if (PATH == NULL) {
-        perror("minimSH: Failed to get $PATH");
-        return -1;
-    }
-    
-    free(PATH); // free the pointer
-}
 
 // some builtin commands. currently cd, pwd, and exit.
-int checkBuiltin(char* argv[MAX_ARGV], int which) {
-    char* homeDirectory = NULL; // for cd with no arguments
+int checkBuiltin(char* argv[MAX_ARGV]) {
+    int check = 0;
+    #ifdef TRIBUTE_MODE
+    int *ptr = NULL; // intentional segfault to make the forest_interlude cooler
+    #endif
 
     #if CWD_SIZE <= 2048
         char cwd[CWD_SIZE];
@@ -49,26 +36,14 @@ int checkBuiltin(char* argv[MAX_ARGV], int which) {
 
     // cd 
     else if (strcmp(argv[0], "cd") == 0) {
-        // argument not specified
         if (argv[1] == NULL) {
-            homeDirectory = getenv("HOME"); // get the home thingy. I assume getenv uses malloc(), similar to strdup
-            if (homeDirectory == NULL) {
-                perror("minimSH: Failed to get home directory");
-                return -1; // error. Yes, I swear these will get put into some log and won't become useless later on.
-            } else {
-                // just self-explanatory
-                if (chdir(homeDirectory) == 0) {
-                    return -1;
-                } else {
-                    perror("cd");
-                    return -1;
-                }
-            }
+            fprintf(stderr, "cd: Specify a directory.\n");
+            return -1;
         }
-
-        // if an argument is specified
-        if (chdir(argv[1]) == 0) {
-            return 1; // succesful
+        check = chdir(argv[1]);
+        if (check == 0) {
+            return -1; // succesful
+        
         } else {
             perror("cd");
             return -1; // error...
@@ -102,10 +77,6 @@ int checkBuiltin(char* argv[MAX_ARGV], int which) {
             return -1;
         }
     }
-
-    else if (strcmp(argv[0], "which") == 0) {
-        
-    }    
     // end of core code
 
     #if CWD_SIZE > 2048

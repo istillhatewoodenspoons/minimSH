@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <signal.h>
 
-#include <sys/types.h>
+#include <sys/types.h> // linux compat
 
 #include "builtins.h"
 #include "defines.h"
@@ -14,8 +14,8 @@
 
 int main() {
     pid_t prog = 0;
-    char* argv[MAX_ARGV]; // the argv thing.
-    char input[INPUT_BUF_SIZE]; // bordering on the edge of killing the stack
+    char* argv[MAX_ARGV]; // the argv thing
+    char input[INPUT_BUF_SIZE];
 
     int check = 0; // general-purpose int used for strcspn
     int count = 0; // token counter!!!!
@@ -32,9 +32,11 @@ int main() {
 
         count = tokenizer(input, argv); // number of succesful tokens (0-indexed)
 
-        // a token limit edge case was removed, it was pretty useless
-        argv[count + 1] = NULL; // this should work but the edge case is there for fun and to catch somebody fucking with the code
-        
+        if ((count + 1) > MAX_ARGV) {
+            fprintf(stderr, "You somehow broke the token limit. How???????\n");
+        } else {
+            argv[count + 1] = NULL; // this should work but the edge case is there for fun and to catch somebody fucking with the code
+        }
         
         // builtin commands code + a quick memory freer for the argvs
         if (argv[0] != NULL) {
@@ -59,7 +61,7 @@ int main() {
         } else if (prog == 0) {
             // the child process!
             execvp(argv[0], argv); // execvp()
-            perror("minimSH"); // I BLAME MYSELF (print error)
+            perror("minimSH");
             exit(EXIT_FAILURE); // exit child process
         } else {
             wait(NULL); // wait, ignore return status
