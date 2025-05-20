@@ -1,10 +1,16 @@
+# os junk. there are special cases
+
 .DS_Store
 .Trashes
 .Spotlight-V100
+Thumbs.db
+
+
+# compiled files and binaries
 
 *.o
 *.obj
 *.elf
 *.bin
 *.out
-.vscode/
+./vscode/

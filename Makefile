@@ -3,6 +3,7 @@ CXX = clang++
 CC = clang
 CXXFLAGS = -Wall -g -std=c++17 -Iinclude  # Add include directory for headers
 CFLAGS = -Wall -g -std=c11 -Iinclude      # Add include directory for headers
+
 # Program name
 PROG = minimSH
 
@@ -19,7 +20,7 @@ SRC_FILES = $(CPP_FILES) $(C_FILES)
 
 # Generate object files from source files
 OBJ_FILES = $(CPP_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o) \
-            $(C_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+		$(C_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # Target executable
 TARGET = $(BIN_DIR)/$(PROG)
@@ -42,21 +43,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up
+# Clean up object files and executable
 clean:
-	rm -rf $(OBJ_DIR)/*.* $(BIN_DIR)/$(PROG)
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/$(PROG)
 
-# Generate dependencies to recompile files if headers change
--include $(OBJ_FILES:.o=.d)
-
-# Create dependencies for C++ source files
-$(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -M $< > $@
-
-# Create dependencies for C source files
-$(OBJ_DIR)/%.d: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -M $< > $@
+# Deep clean everything (use with caution)
 wipe:
-	rm -rf $(OBJ_DIR)/*.* $(BIN_DIR)/$(PROG)
-	rm -rf $(SRC_FILES)/*.*
-	rm -rf $(INC_DIR)/*.*
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/$(PROG)
+	rm -rf $(SRC_DIR)/* $(INC_DIR)/*
