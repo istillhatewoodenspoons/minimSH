@@ -1,3 +1,10 @@
 .DS_Store
 .Trashes
 .Spotlight-V100
+
+*.o
+*.obj
+*.elf
+*.bin
+*.out
+.vscode/
