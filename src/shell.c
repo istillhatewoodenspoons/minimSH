@@ -19,10 +19,13 @@ int main() {
 
     int check = 0; // general-purpose int used for strcspn
     int count = 0; // token counter!!!!
+    uid_t uid = geteuid();
+    char userChar = 0;
 
+    userChar = uid == 0 ? '#': '$'; // set to # or $ depending on if uid = 0 (root)
     // main loop
     while (1) {
-        printf("minimSH - %c ", geteuid() == 0 ? '#' : '$'); // show if running as root user or regular user by checking effective user id
+        printf("minimSH - %c ", userChar); // show if running as root user or regular user by checking effective user id
 
         fgets(input, INPUT_BUF_SIZE, stdin); // read a string from stdin
         
@@ -32,11 +35,7 @@ int main() {
 
         count = tokenizer(input, argv); // number of succesful tokens (0-indexed)
 
-        if ((count + 1) > MAX_ARGV) {
-            fprintf(stderr, "You somehow broke the token limit. How???????\n");
-        } else {
-            argv[count + 1] = NULL; // this should work but the edge case is there for fun and to catch somebody fucking with the code
-        }
+        argv[count + 1] = NULL; // removed edge case code to increase efficency and reduce binary size by a bit :D
         
         // builtin commands code + a quick memory freer for the argvs
         if (argv[0] != NULL) {

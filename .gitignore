@@ -13,4 +13,9 @@ Thumbs.db
 *.elf
 *.bin
 *.out
+./bin/
+
+# vscode garbage
+
 ./vscode/
+

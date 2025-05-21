@@ -11,9 +11,6 @@
 // some builtin commands. currently cd, pwd, and exit.
 int checkBuiltin(char* argv[MAX_ARGV]) {
     int check = 0;
-    #ifdef TRIBUTE_MODE
-    int *ptr = NULL; // intentional segfault to make the forest_interlude cooler
-    #endif
 
     #if CWD_SIZE <= 2048
         char cwd[CWD_SIZE];
@@ -37,12 +34,25 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
     // cd 
     else if (strcmp(argv[0], "cd") == 0) {
         if (argv[1] == NULL) {
-            fprintf(stderr, "cd: Specify a directory.\n");
-            return -1;
+            char* homedir = getenv("HOME"); // get home directory
+            if (homedir == NULL) {
+                perror("cd: failed to get home directory"); // homedir error
+                return -1;
+            }
+
+            check = chdir(homedir);
+            
+            if (check == 0) {
+                return 1; // success           
+            } else {
+                perror("cd");
+                return -1; // error
+            }
+            free(homedir);
         }
         check = chdir(argv[1]);
         if (check == 0) {
-            return -1; // succesful
+            return 1; // succesful
         
         } else {
             perror("cd");
