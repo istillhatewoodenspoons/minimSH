@@ -8,4 +8,8 @@
     #define CWD_SIZE 2048 // do not touch this one and make it go over 2048 if you want memory leaks.
     #define INPUT_BUF_SIZE 8192 // more than enough
 
+    // COMMANDS
+
+    #define SAFE_EXIT -2
+
 #endif

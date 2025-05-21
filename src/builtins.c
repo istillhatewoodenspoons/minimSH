@@ -28,7 +28,7 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
 
     // exit
     if (strcmp(argv[0], "exit") == 0) {
-        return -2; // warning to main() that it needs to exit now and must free the argv[] array
+        return SAFE_EXIT; // warning to main() that it needs to exit now and must free the argv[] array
     }
 
     // cd 
@@ -41,7 +41,7 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
             }
 
             check = chdir(homedir);
-            
+
             if (check == 0) {
                 return 1; // success           
             } else {

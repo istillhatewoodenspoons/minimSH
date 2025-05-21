@@ -40,7 +40,7 @@ int main() {
         // builtin commands code + a quick memory freer for the argvs
         if (argv[0] != NULL) {
             check = checkBuiltin(argv);
-            if (check == -2) {
+            if (check == SAFE_EXIT) { // exit
                 for (int i = 0; i < count; ++i) {
                     if (argv[i] != NULL)
                         free(argv[i]); // free the pointers from their shackles.
@@ -67,5 +67,5 @@ int main() {
             continue;
         }
     }
-    return 0; // the magical code word!
+    return 0; // never reached usually
 }
