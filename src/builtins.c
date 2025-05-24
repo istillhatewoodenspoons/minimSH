@@ -24,7 +24,7 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
 
         memset(cwd, 0, CWD_SIZE); // clear the cwd variable to be safe
 
-        if (getcwd(cwd, CWD_SIZE) == NULL) {
+        if (getcwd(cwd, CWD_SIZE) != NULL) {
             if (argv[1] != NULL) {
                 fprintf(stderr, "pwd: no arguments expected\n");
                 free(cwd);
@@ -35,7 +35,9 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
             perror("pwd"); // print the error message!!!!!!!!!!!!!!!
             return -1;
         }
+        printf("%s\n", cwd);
         free(cwd); // free the cwd, memory leak patch
+        return 1;
     }
     
 
