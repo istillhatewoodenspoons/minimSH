@@ -12,8 +12,9 @@
 #include "defines.h"
 #include "tokenizer.h"
 
+pid_t prog = 0; // this is a global for good reasons lowkey
+
 int main() {
-    pid_t prog = 0;
     char* argv[MAX_ARGV]; // the argv thing
     char input[INPUT_BUF_SIZE];
 
@@ -33,7 +34,7 @@ int main() {
         if (check != strlen(input))
             input[check] = '\0'; // set to NULL character
 
-        count = tokenizer(input, argv); // number of succesful tokens (0-indexed)
+        count = tokenizer(input, argv, " \n"); // number of succesful tokens (0-indexed)
 
         argv[count + 1] = NULL; // removed edge case code to increase efficency and reduce binary size by a bit :D
         

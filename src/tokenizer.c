@@ -5,15 +5,15 @@
 #include "tokenizer.h"
 
 // This function puts strings into tokens[]. They must be free()d. 
-// 
-int tokenizer(char* input, char* tokens[MAX_TOKENS]) {
-    char* currentToken = NULL;
+
+int tokenizer(char* input, char* tokens[MAX_TOKENS], const char* delim) {
+    Token currentToken = { NULL, false, false };
     int count = 0;
 
-    currentToken = strtok(input, " \n");
-        while (currentToken != NULL && count < MAX_TOKENS) {
-            tokens[count] = strdup(currentToken); // duplicate, this makes it so that you need to free it later
-            currentToken = strtok(NULL, " \n"); // currently only does this with SPACES. will expand to quotations.
+    currentToken.token = strtok(input, delim);
+        while (currentToken.token != NULL && count < MAX_TOKENS) {
+            tokens[count] = strdup(currentToken.token); // duplicate, this makes it so that you need to free it later
+            currentToken.token = strtok(NULL, delim); // currently only does this with SPACES. will expand to quotations.
             count++; // increment. this will continue until currentToken == NULL and count > 63
         }
         tokens[count] = NULL;

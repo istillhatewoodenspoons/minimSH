@@ -4,12 +4,12 @@
     #include <stdbool.h>
     #include "defines.h"
 
-    // types
     typedef struct {
         char* token; // the string part of the token
-        bool quotedToken; // did it use quotes?
-    } TOKEN;
+        bool quotedToken; // did it use a quote (will be expanded later)
+        bool redirectionToken; // redirection token? just read the char* if its a redirection token
+    } Token;
 
     // function declerations
-    int tokenizer(char* input, char* tokens[MAX_TOKENS]);
+    int tokenizer(char* input, char* tokens[MAX_TOKENS], const char* delim);
 #endif

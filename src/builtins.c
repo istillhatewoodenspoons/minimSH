@@ -82,8 +82,8 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         if ((term != NULL) && (strcmp(term, "xterm") == 0 || strcmp(term, "xterm-256color") || isatty(STDOUT_FILENO))) {
             printf("\033[H\033[2J"); // ansi escape for clearing
             return 1; // success! back to main
-        } else if (term == NULL) {
-            perror("minimSH"); // haha my shell did the error not getenv
+        } else {
+            perror("minimSH");
             return -1;
         }
     }
