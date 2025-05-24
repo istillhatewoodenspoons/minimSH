@@ -11,12 +11,33 @@
 // some builtin commands. currently cd, pwd, and exit.
 int checkBuiltin(char* argv[MAX_ARGV]) {
     int check = 0;
-    char* cwd = malloc(sizeof(char) * CWD_SIZE);
-    if (cwd == NULL) {
-        perror("Failed to allocate CWD string memory");
-        return;
+
+    /* pwd moved up here to prevent leaks due to the builtin function allocating so much on the heap
+                            this is due to ongoing memory leaks                                      */
+    if (strcmp(argv[0], "pwd") == 0) {
+        char* cwd = malloc(sizeof(char) * CWD_SIZE);
+
+        if (cwd == NULL) {
+            perror("Failed to allocate CWD string memory");
+            return -1;
+        }
+
+        memset(cwd, 0, CWD_SIZE); // clear the cwd variable to be safe
+
+        if (getcwd(cwd, CWD_SIZE) == NULL) {
+            if (argv[1] != NULL) {
+                fprintf(stderr, "pwd: no arguments expected\n");
+                free(cwd);
+                return -1; // --> main(), error, do a continue;
+            }
+        } else {
+            free(cwd);
+            perror("pwd"); // print the error message!!!!!!!!!!!!!!!
+            return -1;
+        }
+        free(cwd); // free the cwd, memory leak patch
     }
-        memset(cwd, 0, CWD_SIZE); // fuck you VSC for not syntax highlighting this
+    
 
 
     // CORE CODE HERE!
@@ -52,20 +73,6 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         } else {
             perror("cd");
             return -1; // error...
-        }
-    }
-
-    // pwd
-    else if (strcmp(argv[0], "pwd") == 0) {
-        // chars shoud usually be bytes, but this may be a dumb decision if some stupid compiler comes along.
-        if (getcwd(cwd, CWD_SIZE) != 0) {
-            if (argv[1] != NULL) {
-                fprintf(stderr, "pwd: no arguments expected\n");
-                return -1; // --> main(), error, do a continue;
-            }
-        } else {
-            perror("pwd"); // print the error message!!!!!!!!!!!!!!!
-            return -1;
         }
     }
 
