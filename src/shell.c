@@ -6,7 +6,9 @@
 #include <unistd.h>
 #include <signal.h>
 
-#include <sys/types.h> // linux compat
+// linux compat reasons
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "builtins.h"
 #include "defines.h"
@@ -15,8 +17,17 @@
 pid_t prog = 0; // this is a global for good reasons lowkey
 
 int main() {
-    char* argv[MAX_ARGV]; // the argv thing
-    char input[INPUT_BUF_SIZE];
+    // mallocs are used to reduce reliance on the stack here and prevent crashes
+    char** argv = malloc(sizeof(char*) * MAX_ARGV); // the argv thing
+    if (argv == NULL) {
+        perror("Critical; malloc");
+        exit(EXIT_FAILURE);
+    }
+    char* input = malloc(sizeof(char) * INPUT_BUF_SIZE);
+    if (input == NULL) {
+        perror("Critical; malloc");
+        exit(EXIT_FAILURE);
+    }
 
     int check = 0; // general-purpose int used for strcspn
     int count = 0; // token counter!!!!
@@ -43,12 +54,13 @@ int main() {
             check = checkBuiltin(argv);
             if (check == SAFE_EXIT) { // exit
                 for (int i = 0; i < count; ++i) {
-                    if (argv[i] != NULL)
+                    if (argv[i] != NULL) {
                         free(argv[i]); // free the pointers from their shackles.
+                    }
                 }
                 exit(EXIT_SUCCESS);
             } else if (check != 0) {
-                // -2 will never reach here because it would exit. Just clarifying.
+                // any other builtin. error code will not be handled at this time
                 continue;
             }
         }

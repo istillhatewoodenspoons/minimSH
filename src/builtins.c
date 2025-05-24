@@ -11,18 +11,13 @@
 // some builtin commands. currently cd, pwd, and exit.
 int checkBuiltin(char* argv[MAX_ARGV]) {
     int check = 0;
-
-    #if CWD_SIZE <= 2048
-        char cwd[CWD_SIZE];
-        memset(cwd, 0, CWD_SIZE); // cwd is zeroed out
-    #else
-        char* cwd = malloc(CWD_SIZE);
-        if (cwd == NULL) {
-            perror("Failed to allocate CWD string memory");
-            return;
-        }
+    char* cwd = malloc(sizeof(char) * CWD_SIZE);
+    if (cwd == NULL) {
+        perror("Failed to allocate CWD string memory");
+        return;
+    }
         memset(cwd, 0, CWD_SIZE); // fuck you VSC for not syntax highlighting this
-    #endif
+
 
     // CORE CODE HERE!
 
