@@ -1,1 +1,1 @@
-hey. this is some random project i'm making and should NOT be used personally as i write shitcode sometimes.
+note: why did i add a *.exe to my gitignore when theres literally unistd in this project
