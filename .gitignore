@@ -13,7 +13,8 @@ Thumbs.db
 *.elf
 *.bin
 *.out
-./bin/
+*.exe
+minimSH
 
 # vscode garbage
 
