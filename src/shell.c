@@ -74,9 +74,18 @@ int main() {
             // the child process!
             execvp(argv[0], argv); // execvp()
             perror("minimSH");
+
+            // free argv to prevent leak (only on error)
+            for (int i = 0; i < MAX_ARGV; ++i) {
+                if (argv[i] != NULL) free(argv[i]);
+            }
+
             exit(EXIT_FAILURE); // exit child process
         } else {
             wait(NULL); // wait, ignore return status
+            for (int i = 0; i < MAX_ARGV; ++i) {
+                if (argv[i] != NULL) free(argv[i]);
+            }
             continue;
         }
     }

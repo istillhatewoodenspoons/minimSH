@@ -78,18 +78,10 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         }
     }
 
-    // clear
+    // clear (removed conditional code, literally all nixes basically support this shit)
     else if (strcmp(argv[0], "clear") == 0) {
-        char* term = NULL; // only used in clear
-        term = getenv("TERM");
-        // very cool comparison
-        if ((term != NULL) && (strcmp(term, "xterm") == 0 || strcmp(term, "xterm-256color") || isatty(STDOUT_FILENO))) {
-            printf("\033[H\033[2J"); // ansi escape for clearing
-            return 1; // success! back to main
-        } else {
-            perror("minimSH");
-            return -1;
-        }
+        printf("\033[H\033[2J"); // ansi escape for clearing
+        return 1; // success! back to main
     }
     // end of core code
 
