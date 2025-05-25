@@ -34,19 +34,14 @@ int main() {
     uid_t uid = geteuid();
     char userChar = 0;
 
-    userChar = uid == 0 ? '#': '$'; // set to # or $ depending on if uid = 0 (root)
+    userChar = uid == 0 ? '#': '$'; // set char based upon uid == 0 and uid != 0
     // main loop
     while (1) {
-        printf("minimSH - %c ", userChar); // show if running as root user or regular user by checking effective user id
-
+        printf("minimSH - %c ", userChar); // prompt
         fgets(input, INPUT_BUF_SIZE, stdin); // read a string from stdin
-        
-        check = strcspn(input, "\n"); // process of removing a newline
-        if (check != strlen(input))
-            input[check] = '\0'; // set to NULL character
+        input[strcspn(input, "\n")] = '\0'; // optimization was done here
 
         count = tokenizer(input, argv, " \n"); // number of succesful tokens (0-indexed)
-
         argv[count + 1] = NULL; // removed edge case code to increase efficency and reduce binary size by a bit :D
         
         // builtin commands code + a quick memory freer for the argvs
