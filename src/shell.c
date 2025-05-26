@@ -51,6 +51,7 @@ int main() {
                 for (int i = 0; i < count; ++i) {
                     if (argv[i] != NULL) {
                         free(argv[i]); // free the pointers from their shackles.
+                        argv[i] = NULL; // prevent dangling pointers
                     }
                 }
                 exit(EXIT_SUCCESS);
@@ -72,14 +73,20 @@ int main() {
 
             // free argv to prevent leak (only on error)
             for (int i = 0; i < MAX_ARGV; ++i) {
-                if (argv[i] != NULL) free(argv[i]);
+                if (argv[i] != NULL) { 
+                    free(argv[i]);
+                    argv[i] = NULL; // dangling pointer fix
+                }
             }
 
             exit(EXIT_FAILURE); // exit child process
         } else {
             wait(NULL); // wait, ignore return status
             for (int i = 0; i < MAX_ARGV; ++i) {
-                if (argv[i] != NULL) free(argv[i]);
+                if (argv[i] != NULL) {
+                    free(argv[i]);
+                    argv[i] = NULL; // dangling pointer fix
+                }
             }
             continue;
         }
