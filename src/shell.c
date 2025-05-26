@@ -54,6 +54,7 @@ int main() {
                         argv[i] = NULL; // prevent dangling pointers
                     }
                 }
+                free(argv); // failed to put this in here
                 exit(EXIT_SUCCESS);
             } else if (check != 0) {
                 // any other builtin. error code will not be handled at this time
