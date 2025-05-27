@@ -52,7 +52,7 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
     // cd 
     else if (strcmp(argv[0], "cd") == 0) {
         if (argv[1] == NULL) {
-            char* homedir = getenv("HOME"); // get home directory
+            char *homedir = getenv("HOME"); // get home directory
             if (homedir == NULL) {
                 perror("cd: failed to get home directory"); // homedir error
                 return -1;
@@ -66,7 +66,7 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
                 perror("cd");
                 return -1; // error
             }
-            free(homedir);
+            // removed unneeded free(), getenv() memory is managed by OS
         }
         check = chdir(argv[1]);
         if (check == 0) {
@@ -78,16 +78,12 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         }
     }
 
-    // clear (removed conditional code, literally all nixes basically support this shit)
+    // clear (removed conditional code, literally all *nixes basically support this shit)
     else if (strcmp(argv[0], "clear") == 0) {
         printf("\033[H\033[2J"); // ansi escape for clearing
         return 1; // success! back to main
     }
     // end of core code
-
-    #if CWD_SIZE > 2048
-        free(cwd); // the constant reallocating and deallocating will piss people off, that's for sure.
-    #endif
 
     return 0; // if nothing happened
 }
