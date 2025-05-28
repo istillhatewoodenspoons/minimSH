@@ -93,6 +93,8 @@ int main() {
             continue;
         }
     }
-    free(argv); // if a catastrophic error does occur, this is a safeguard
+    // if a catastrophic error does occur, these are a safeguard
+    free(argv);
+    free(input);
     return 0; // never reached usually
 }
