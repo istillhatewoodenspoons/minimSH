@@ -48,13 +48,13 @@ int main() {
 
     // main loop
     while (1) {
-        kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
         #if defined (__MACH__) && defined (__DEBUG)
+            kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
             if (kerr == KERN_SUCCESS)
                 printf("(memsize - %012llu bytes) minimSH - %c ", (unsigned long long)info.resident_size, userChar); // prompt
             else
                 printf("(task_info() failed) minimSH - %c ", userChar);
-        #elif
+        #else
             printf("minimSH - %c ", userChar); // prompt
         #endif
         fgets(input, INPUT_BUF_SIZE, stdin); // read a string from stdin

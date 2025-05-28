@@ -2,7 +2,8 @@
 #define DEFINES_H
 
     // These are here for debugging and expansion. DO NOT TOUCH THEM UNLESS YOU ARE A MADMAN!
-    #define __DEBUG
+
+    // #define __DEBUG (uncomment to unlock macOS-specific memory reading functions i guess)
     #define MAX_ARGV 64
 
     #define CWD_SIZE 2048 // do not touch this one and make it go over 2048 if you want memory leaks.
