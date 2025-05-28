@@ -55,6 +55,7 @@ int main() {
                     }
                 }
                 free(argv); // failed to put this in here
+                free(input); // and this
                 exit(EXIT_SUCCESS);
             } else if (check != 0) {
                 // any other builtin. error code will not be handled at this time
