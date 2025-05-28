@@ -14,6 +14,14 @@
 #include "defines.h"
 #include "tokenizer.h"
 
+// used for debugging memleaks on macos
+#if defined (__MACH__) && defined (__DEBUG)
+    #include <mach/mach.h>
+    struct task_basic_info info;
+    mach_msg_type_number_t size = MACH_TASK_BASIC_INFO_COUNT;
+    kern_return_t kerr;
+#endif
+
 pid_t prog = 0; // this is a global for good reasons lowkey
 
 int main() {
@@ -35,9 +43,20 @@ int main() {
     char userChar = 0;
 
     userChar = uid == 0 ? '#': '$'; // set char based upon uid == 0 and uid != 0
+
+
+
     // main loop
     while (1) {
-        printf("minimSH - %c ", userChar); // prompt
+        kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
+        #if defined (__MACH__) && defined (__DEBUG)
+            if (kerr == KERN_SUCCESS)
+                printf("(memsize - %012llu bytes) minimSH - %c ", (unsigned long long)info.resident_size, userChar); // prompt
+            else
+                printf("(task_info() failed) minimSH - %c ", userChar);
+        #elif
+            printf("minimSH - %c ", userChar); // prompt
+        #endif
         fgets(input, INPUT_BUF_SIZE, stdin); // read a string from stdin
         input[strcspn(input, "\n")] = '\0'; // optimization was done here
 
@@ -87,7 +106,7 @@ int main() {
             for (int i = 0; i < MAX_ARGV; ++i) {
                 if (argv[i] != NULL) {
                     free(argv[i]);
-                    argv[i] = NULL; // dangling pointer fix
+                    argv[i] = NULL; // dangling pointer fix + satisfy check
                 }
             }
             continue;
