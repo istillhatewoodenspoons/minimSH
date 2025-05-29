@@ -25,6 +25,7 @@
 pid_t prog = 0; // this is a global for good reasons lowkey
 
 int main() {
+    int maxTokens = MAX_ARGV - 1;
     // mallocs are used to reduce reliance on the stack here and prevent crashes
     char** argv = malloc(sizeof(char*) * MAX_ARGV); // the argv thing
     if (argv == NULL) {
@@ -60,8 +61,9 @@ int main() {
         fgets(input, INPUT_BUF_SIZE, stdin); // read a string from stdin
         input[strcspn(input, "\n")] = '\0'; // optimization was done here
 
-        count = tokenizer(input, argv, " \n"); // number of succesful tokens (0-indexed)
-        argv[count + 1] = NULL; // removed edge case code to increase efficency and reduce binary size by a bit :D
+        count = tokenizer(input, argv, " \n", &maxTokens); // number of succesful tokens (0-indexed)
+        if (count != -1)
+            argv[count + 1] = NULL; // removed edge case code to increase efficency and reduce binary size by a bit :D
         
         // builtin commands code + a quick memory freer for the argvs
         if (argv[0] != NULL) {

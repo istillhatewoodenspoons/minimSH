@@ -4,21 +4,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> // sorry windows people :P
+#include <dirent.h> // for which
 
 #include "builtins.h"
 #include "defines.h"
+#include "tokenizer.h"
 
 // some builtin commands. currently cd, pwd, and exit.
-int checkBuiltin(char* argv[MAX_ARGV]) {
+int checkBuiltin(char** argv) {
     int check = 0;
 
-    /* pwd moved up here to prevent leaks due to the builtin function allocating so much on the heap
-                            this is due to ongoing memory leaks                                      */
     if (strcmp(argv[0], "pwd") == 0) {
         char* cwd = malloc(sizeof(char) * CWD_SIZE);
 
         if (cwd == NULL) {
-            perror("Failed to allocate CWD string memory");
+            perror("pwd: Failed to allocate CWD string memory");
             return -1;
         }
 
@@ -39,13 +39,9 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         free(cwd); // free the cwd, memory leak patch
         return 1;
     }
-    
-
-
-    // CORE CODE HERE!
 
     // exit
-    if (strcmp(argv[0], "exit") == 0) {
+    else if (strcmp(argv[0], "exit") == 0) {
         return SAFE_EXIT; // warning to main() that it needs to exit now and must free the argv[] array
     }
 
@@ -54,7 +50,7 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         if (argv[1] == NULL) {
             char *homedir = getenv("HOME"); // get home directory
             if (homedir == NULL) {
-                perror("cd: failed to get home directory"); // homedir error
+                perror("cd: failed to get $HOME"); // homedir error
                 return -1;
             }
 
@@ -83,7 +79,6 @@ int checkBuiltin(char* argv[MAX_ARGV]) {
         printf("\033[H\033[2J"); // ansi escape for clearing
         return 1; // success! back to main
     }
-    // end of core code
-
+    
     return 0; // if nothing happened
 }

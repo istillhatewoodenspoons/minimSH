@@ -11,5 +11,5 @@
     } Token;
 
     // function declerations
-    int tokenizer(char* input, char** tokens, const char* delim);
+    int tokenizer(char* input, char** tokens, const char* delim, int* maxToken);
 #endif
