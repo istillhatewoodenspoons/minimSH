@@ -10,11 +10,9 @@
     #define WHICH_MAX_PATH_TOKENS 512 // enough for my Mac, enough for anybody
 
     // input buffers and strings
-    #define CWD_SIZE 8192 // eh, the heap needs more pressure /j
-    #define INPUT_BUF_SIZE 8192 // more than enough
-    #define WHICH_PATH_STRING_SIZE 4096 // stack pressure won't be bad because it gets deallocated almost instantly
-
-    
+    #define CWD_SIZE 512 
+    #define INPUT_BUF_SIZE 4096 // more than enough
+    #define WHICH_PATH_STRING_SIZE 4096
 
     // COMMANDS
     #define SAFE_EXIT -2

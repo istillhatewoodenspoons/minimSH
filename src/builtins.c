@@ -82,7 +82,7 @@ int checkBuiltin(char** argv) {
     // this is because a teto is critical to debugging and is funny
     #ifdef __DEBUG
         else if (argv[0] != NULL && strcmp(argv[0], "teto") == 0) {
-            printf("no\n");
+            printf("teto world domination\n");
             return (04 - 01 - 2008);
         }
     #endif

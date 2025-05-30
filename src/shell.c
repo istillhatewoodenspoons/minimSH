@@ -47,10 +47,14 @@ void criticalSigHandler(int signum) {
 }
 
 void normalSigHandler(int signum) {
-    if (prog != 0)
+    if (prog != 0) {
         kill(prog, signum); // die you cursed demon
-    else
+    } else if (signum == SIGQUIT) {
+        kill(prog, SIGKILL);
+        exit(EXIT_SUCCESS);
+    } else {
         printf("\n"); // act like nothing happened
+    }
     return;
 }
 
@@ -100,7 +104,21 @@ int main() {
         #else
             printf("minimSH - %c ", userChar); // prompt
         #endif
-        fgets(input, INPUT_BUF_SIZE, stdin); // read a string from stdin
+
+        // fix to prevent spasm from pressing ^D
+        if (fgets(input, INPUT_BUF_SIZE, stdin) == NULL) {
+            printf("\n");
+            for (int i = 0; i < count; ++i) {
+                    if (argv[i] != NULL) {
+                        free(argv[i]); // free the pointers from their shackles.
+                        argv[i] = NULL; // prevent dangling pointers
+                    }
+                }
+            free(argv); // failed to put this in here
+            free(input); // and this
+            exit(EXIT_SUCCESS);
+        }
+        
         input[strcspn(input, "\n")] = '\0'; // optimization was done here
 
         count = tokenizer(input, argv, " \n", &maxTokens); // number of succesful tokens (0-indexed)
