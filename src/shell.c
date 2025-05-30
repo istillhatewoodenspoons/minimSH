@@ -49,19 +49,20 @@ void criticalSigHandler(int signum) {
 void normalSigHandler(int signum) {
     if (prog != 0) {
         kill(prog, signum); // die you cursed demon
-    } else if (signum == SIGQUIT) {
-        kill(prog, SIGKILL);
-        exit(EXIT_SUCCESS);
-    } else {
-        printf("\n"); // act like nothing happened
+        printf("\n"); // more clean output
+        return;
     }
     return;
 }
 
 int main() {
     struct sigaction normalSigAct, criticalSigAct;
-    normalSigAct.sa_handler = normalSigHandler; criticalSigAct.sa_handler = criticalSigHandler; // oololololo
-    normalSigAct.sa_flags = 0; criticalSigAct.sa_flags = 0;
+
+    normalSigAct.sa_handler = normalSigHandler; 
+    criticalSigAct.sa_handler = criticalSigHandler; // oololololo
+
+    normalSigAct.sa_flags = 0; 
+    criticalSigAct.sa_flags = 0;
 
 
     for (int i = 0; i < sizeof(normalSignalList) / sizeof(int); ++i) {
@@ -105,20 +106,8 @@ int main() {
             printf("minimSH - %c ", userChar); // prompt
         #endif
 
-        // fix to prevent spasm from pressing ^D
-        if (fgets(input, INPUT_BUF_SIZE, stdin) == NULL) {
-            printf("\n");
-            for (int i = 0; i < count; ++i) {
-                    if (argv[i] != NULL) {
-                        free(argv[i]); // free the pointers from their shackles.
-                        argv[i] = NULL; // prevent dangling pointers
-                    }
-                }
-            free(argv); // failed to put this in here
-            free(input); // and this
-            exit(EXIT_SUCCESS);
-        }
-        
+        // this section was causing sigstop. so i reversed it
+        fgets(input, INPUT_BUF_SIZE, stdin);
         input[strcspn(input, "\n")] = '\0'; // optimization was done here
 
         count = tokenizer(input, argv, " \n", &maxTokens); // number of succesful tokens (0-indexed)
