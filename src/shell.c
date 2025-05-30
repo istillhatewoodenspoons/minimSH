@@ -24,7 +24,50 @@
 
 pid_t prog = 0; // this is a global for good reasons lowkey
 
+// im ignoring sigchild. deal with it.
+
+// Signals
+int normalSignalList[] = {
+    SIGINT, SIGQUIT, SIGTSTP, SIGTTIN, SIGTTOU, SIGHUP, SIGPIPE, SIGCONT
+};
+
+
+int criticalSignalList[] = {
+    SIGSEGV, SIGILL, SIGFPE, SIGABRT, SIGBUS, SIGSYS
+};
+
+// kill the poor children
+void criticalSigHandler(int signum) {
+    if (prog != 0) {
+        kill(prog, signum);
+        exit(EXIT_FAILURE); // after killing your kids, commit suicide :D
+    } else {
+        exit(EXIT_FAILURE); // suicide because no kids, no family, no friends
+    }
+}
+
+void normalSigHandler(int signum) {
+    if (prog != 0)
+        kill(prog, signum); // die you cursed demon
+    else
+        printf("\n"); // act like nothing happened
+    return;
+}
+
 int main() {
+    struct sigaction normalSigAct, criticalSigAct;
+    normalSigAct.sa_handler = normalSigHandler; criticalSigAct.sa_handler = criticalSigHandler; // oololololo
+    normalSigAct.sa_flags = 0; criticalSigAct.sa_flags = 0;
+
+
+    for (int i = 0; i < sizeof(normalSignalList) / sizeof(int); ++i) {
+        sigaction(normalSignalList[i], &normalSigAct, NULL);
+    }
+
+    for (int i = 0; i < sizeof(criticalSignalList) / sizeof(int); ++i) {
+        sigaction(criticalSignalList[i], &criticalSigAct, NULL);
+    }
+
     int maxTokens = MAX_ARGV - 1;
     // mallocs are used to reduce reliance on the stack here and prevent crashes
     char** argv = malloc(sizeof(char*) * MAX_ARGV); // the argv thing
@@ -45,14 +88,13 @@ int main() {
 
     userChar = uid == 0 ? '#': '$'; // set char based upon uid == 0 and uid != 0
 
-
-
     // main loop
     while (1) {
+        prog = 0;
         #if defined (__MACH__) && defined (__DEBUG)
             kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
             if (kerr == KERN_SUCCESS)
-                printf("(memsize - %012llu bytes) minimSH - %c ", (unsigned long long)info.resident_size, userChar); // prompt
+                printf("(memsize - %luK) minimSH - %c ", (unsigned long)(info.resident_size / 1000), userChar); // prompt
             else
                 printf("(task_info() failed) minimSH - %c ", userChar);
         #else

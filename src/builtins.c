@@ -64,10 +64,9 @@ int checkBuiltin(char** argv) {
             }
             // removed unneeded free(), getenv() memory is managed by OS
         }
-        check = chdir(argv[1]);
-        if (check == 0) {
-            return 1; // succesful
         
+        if (chdir(argv[1]) == 0) {
+            return 1; // succesful
         } else {
             perror("cd");
             return -1; // error...
@@ -79,6 +78,6 @@ int checkBuiltin(char** argv) {
         printf("\033[H\033[2J"); // ansi escape for clearing
         return 1; // success! back to main
     }
-    
+
     return 0; // if nothing happened
 }

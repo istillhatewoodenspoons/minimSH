@@ -4,4 +4,4 @@ TODO:
 * Quotes for tokens
 * Globbing for the wildcards I guess
 * Redirection
-* Signals should passed along to the child process if it exists, otherwise ignore the signal.
+* ~~Signals should passed along to the child process if it exists, otherwise ignore the signal.~~ COMPLETED

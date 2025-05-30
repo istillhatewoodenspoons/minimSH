@@ -1,8 +1,8 @@
 # Compiler and flags
 CXX = clang++
 CC = clang
-CXXFLAGS = -Wall -g -std=c++17 -Iinclude  # Add include directory for headers
-CFLAGS = -Wall -g -std=c11 -Iinclude      # Add include directory for headers
+CXXFLAGS = -O3 -Wall -g -std=c++17 -Iinclude  # Add include directory for headers
+CFLAGS = -O3 -Wall -g -std=c11 -Iinclude      # Add include directory for headers
 
 # Program name
 PROG = minimSH
