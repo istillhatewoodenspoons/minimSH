@@ -3,7 +3,7 @@
 
     // These are here for debugging and expansion. DO NOT TOUCH THEM UNLESS YOU ARE A MADMAN!
 
-    #define __DEBUG // (uncomment to unlock macOS-specific memory reading functions i guess)
+    // #define __DEBUG // (uncomment to unlock macOS-specific memory reading functions i guess)
 
     // arrays
     #define MAX_ARGV 256
