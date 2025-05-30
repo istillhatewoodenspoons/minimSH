@@ -9,6 +9,7 @@ Thumbs.db
 # compiled files and binaries
 
 *.o
+*.d
 *.obj
 *.elf
 *.bin

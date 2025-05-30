@@ -1,1 +1,1 @@
-note: why did i add a *.exe to my gitignore when theres literally unistd in this project
+sorry if i sound insane in these commits. this WAS a private repo but i made it public because i get more features to look at. cool graphs are cool to look at.

@@ -1,8 +1,8 @@
 # Compiler and flags
 CXX = clang++
 CC = clang
-CXXFLAGS = -O3 -Wall -g -std=c++17 -Iinclude  # Add include directory for headers
-CFLAGS = -O3 -Wall -g -std=c11 -Iinclude      # Add include directory for headers
+CXXFLAGS = -O3 -Wall -g -std=c++17 -Iinclude -MMD -MP
+CFLAGS = -O3 -Wall -g -std=c11 -Iinclude -MMD -MP
 
 # Program name
 PROG = minimSH
@@ -20,7 +20,10 @@ SRC_FILES = $(CPP_FILES) $(C_FILES)
 
 # Generate object files from source files
 OBJ_FILES = $(CPP_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o) \
-		$(C_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+            $(C_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+# Generate dependency files (.d)
+DEP_FILES = $(OBJ_FILES:.o=.d)
 
 # Target executable
 TARGET = $(BIN_DIR)/$(PROG)
@@ -29,7 +32,7 @@ TARGET = $(BIN_DIR)/$(PROG)
 all: $(TARGET)
 
 # Link object files into the executable
-$(TARGET): $(OBJ_FILES)          
+$(TARGET): $(OBJ_FILES)
 	mkdir -p $(BIN_DIR)
 	$(CXX) $(OBJ_FILES) -o $(TARGET)
 
@@ -43,7 +46,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up object files and executable
+# Include dependency files if they exist
+-include $(DEP_FILES)
+
+# Clean up object files, dependency files, and executable
 clean:
 	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/$(PROG)
 

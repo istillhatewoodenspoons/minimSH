@@ -47,7 +47,7 @@ int checkBuiltin(char** argv) {
 
     // cd 
     else if (strcmp(argv[0], "cd") == 0) {
-        if (argv[1] == NULL) {
+        if (argv[1] == NULL || strcmp(argv[1], "~") == 0) {
             char *homedir = getenv("HOME"); // get home directory
             if (homedir == NULL) {
                 perror("cd: failed to get $HOME"); // homedir error
@@ -78,6 +78,14 @@ int checkBuiltin(char** argv) {
         printf("\033[H\033[2J"); // ansi escape for clearing
         return 1; // success! back to main
     }
+
+    // this is because a teto is critical to debugging and is funny
+    #ifdef __DEBUG
+        else if (argv[0] != NULL && strcmp(argv[0], "teto") == 0) {
+            printf("no\n");
+            return (04 - 01 - 2008);
+        }
+    #endif
 
     return 0; // if nothing happened
 }

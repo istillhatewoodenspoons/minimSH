@@ -14,13 +14,14 @@ int tokenizer(char* input, char** tokens, const char* delim, int* maxToken) {
     if (maxToken == NULL) {
         return -1;
     }
-    
+
     currentToken.token = strtok(input, delim);
-        while (currentToken.token != NULL && count < *maxToken) {
-            tokens[count] = strdup(currentToken.token); // duplicate, this makes it so that you need to free it later
-            currentToken.token = strtok(NULL, delim); // currently only does this with SPACES. will expand to quotations.
-            count++; // increment. this will continue until currentToken == NULL and count > maxToken
-        }
+
+    while (currentToken.token != NULL && count < *maxToken) {
+        tokens[count] = strdup(currentToken.token); // duplicate, this makes it so that you need to free it later
+        currentToken.token = strtok(NULL, delim); // currently only does this with SPACES. will expand to quotations.
+        count++; // increment. this will continue until currentToken == NULL and count > maxToken
+    }
     tokens[count] = NULL;
     return count; // return number of tokens stored?
 }
